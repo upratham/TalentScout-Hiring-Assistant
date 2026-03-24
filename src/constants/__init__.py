@@ -83,3 +83,9 @@ Rules:
 
 Do not include answers. Only questions.
 """
+FAREWELL = (
+    "Thank you so much for your time today! The TalentScout team will review "
+    "your profile and reach out within 3-5 business days. "
+    "We wish you all the best in your journey! Goodbye! 👋"
+)
+ 

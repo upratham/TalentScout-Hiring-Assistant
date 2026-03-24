@@ -1,11 +1,11 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from src.constants import *
 from datetime import datetime
 from openai import OpenAI
 import json
 import os
-from src.logger import configure_logger
-logging = configure_logger()
+from src.logger import logging
+logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 @dataclass

@@ -1,8 +1,13 @@
 from dataclasses import dataclass
+
+from streamlit import logger
 from src.candidate import  Candidate
 from src.constants import *
-from src.logger import configure_logger
-logging = configure_logger()
+from src.conversation import ConversationState
+from openai import OpenAI
+from src.logger import logging
+logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)
+client = OpenAI(api_key=OPENAI_API_KEY)
  # Load .env variables into environment, allowing overrides
 
 
@@ -59,5 +64,57 @@ class Core:
             "within 3-5 business days. We wish you all the best! Goodbye!"
         )
         return farewell
-
-        
+    def call_llm(messages: list, temperature: float = 0.7, max_tokens: int = 1000) -> str:
+        """Core LLM call with error handling."""
+        try:
+            response = client.chat.completions.create(
+                model=MODEL,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            return f"I'm having a technical issue. Please try again. (Error: {str(e)[:60]})"
+    @staticmethod
+    def handle_message(state: ConversationState, user_input: str) -> tuple[str, bool]:
+        """
+        Processes one user turn.
+    
+        Steps:
+        1. Check for exit intent → return farewell and mark inactive
+        2. Append user message to history
+        3. Call LLM with full history
+        4. Append reply to history
+        5. Return reply
+    
+        Args:
+            state      : current ConversationState
+            user_input : raw text from the user
+    
+        Returns:
+            tuple[str, bool]: (reply_text, is_conversation_ended)
+        """
+        logging.debug(
+            "Handling message. turn=%d input_length=%d input_preview='%.60s'",
+            state.turn_count, len(user_input), user_input,
+        )
+    
+        # Exit check before making any API call
+        if Core.is_exit_intent(user_input):
+            logging.info("Exit intent. Ending conversation at turn=%d.", state.turn_count)
+            state.is_active = False
+            return FAREWELL, True
+    
+        # Normal turn
+        state.messages.append({"role": "user", "content": user_input})
+        reply = Core.call_llm(state.messages)
+        state.messages.append({"role": "assistant", "content": reply})
+        state.turn_count += 1
+    
+        logger.info(
+            "Turn %d complete. reply_length=%d total_messages=%d",
+            state.turn_count, len(reply), len(state.messages),
+        )
+    
+        return reply, False            
