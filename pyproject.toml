@@ -29,6 +29,7 @@ dependencies = [
   "python-dotenv>=1.0.0",
   "path>=0.10.0",
   "setuptools>=65.0.0",
+  "gradio>=3.0.0",
 ]
 
 [tool.setuptools]
