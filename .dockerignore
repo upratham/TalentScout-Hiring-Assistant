@@ -1,0 +1,8 @@
+logs
+.env
+README.md
+.gitignore
+template.py
+LICENSE
+src.egg-info
+notebooks
