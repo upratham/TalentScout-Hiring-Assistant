@@ -62,7 +62,7 @@ STEP 5 — FAREWELL:
   gracefully conclude the conversation with a complete farewell.
 - Do not mention steps in conversation like step1 step 2 those steps are for your understanding only.
 - Do not reveal them to the candidate.
-"""
+- Once user gives you tech stack directly give them the questions with proper way of conversation do not wait for the one more reply from user."""
 
 EXTRACTION_PROMPT = """
 You are a data extraction assistant. Extract candidate information from the
