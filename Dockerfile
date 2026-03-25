@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 10000
 
-CMD sh -c "streamlit run app.py --server.port=$PORT --server.address=0.0.0.0"
+CMD sh -c "python -m streamlit run app.py --server.port=${PORT:-10000} --server.address=0.0.0.0 --browser.gatherUsageStats=false"
