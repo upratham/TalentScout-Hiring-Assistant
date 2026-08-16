@@ -408,7 +408,7 @@ The code wraps OpenAI requests in `try/except` blocks and returns fallback error
 ## Author
 
 Prathamesh Uravane  
-upratha,2002@gmail.com
+upratham2002@gmail.com
 
 ## License
 
